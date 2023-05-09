@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #B31B1B; /* UMASS red */
+        }
+
+        .box {
+            background-color: lightgrey;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #videoElement, #capturedImage {
+            width: 640px;
+            height: 480px;
+            border: 1px solid black;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <video autoplay="true" id="videoElement"></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <img id="capturedImage" style="display:none;">
+            <div class="buttons">
+                <button id="backButton">Back</button>
+                <button id="takePhoto">Take Photo</button>
+                <button id="retakePhoto" style="display:none;">Retake Photo</button>
+                <button id="usePhoto" style="display:none;">Use This Photo</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const video = document.getElementById("videoElement");
+            const canvas = document.getElementById("canvas");
+            const capturedImage = document.getElementById("capturedImage");
+            const takePhoto = document.getElementById("takePhoto");
+            const backButton = document.getElementById("backButton");
+            const retakePhoto = document.getElementById("retakePhoto");
+            const usePhoto = document.getElementById("usePhoto");
+
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function (error) {
+                        console.error("Error accessing camera:", error);
+                    });
+            }
+
+            takePhoto.addEventListener("click", function() {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext("2d").drawImage(video, 0, 0);
+                capturedImage.src = canvas.toDataURL("image/png");
+                capturedImage.style.display = "block";
+                video.style.display = "none";
+                takePhoto.style.display = "none";
+                retakePhoto.style.display = "inline-block";
+                usePhoto.style.display = "inline-block";
+            });
+
+            backButton.addEventListener("click", function() {
+                window.location.href = "/details";
+            });
+
+            retakePhoto.addEventListener("click", function() {
+                video.style.display = "block";
+                capturedImage.style.display = "none";
+                takePhoto.style.display = "inline-block";
+                retakePhoto.style.display = "none";
+                usePhoto.style.display = "none";
+            });
+
+            usePhoto.addEventListener("click", function() {
+                const imageData = capturedImage.src;
+
+                fetch('/save_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'image_data=' + encodeURIComponent(imageData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Failed to save image');
+                    }
+                })
+                .then(data => {
+                    // Handle successful image saving, e.g., redirect to the voting page
+                    window.location.href = "/vote";
+                })
+                .catch(error => {
+                    console.error('Error saving image:', error);
+                    // Handle error, e.g., display an error message
+                });
+            });
+        });
+    </script>
+</body>
+</html>
