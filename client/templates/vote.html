@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #B31B1B; /* UMASS red */
+        }
+
+        .content-box {
+            background-color: lightgrey;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .poll-section {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-box">
+            <h1>Vote</h1>
+            <form method="POST">
+                <div class="poll-section">
+                    <h2>Class President</h2>
+                    <label><input type="radio" name="president" value="candidate1"> Candidate 1</label>
+                    <label><input type="radio" name="president" value="candidate2"> Candidate 2</label>
+                    <label><input type="radio" name="president" value="candidate3"> Candidate 3</label>
+                </div>
+                <div class="poll-section">
+                    <h2>How cool is this project?</h2>
+                    <label><input type="radio" name="project_coolness" value="1"> Not cool at all</label>
+                    <label><input type="radio" name="project_coolness" value="2"> Somewhat cool</label>
+                    <label><input type="radio" name="project_coolness" value="3"> Cool</label>
+                    <label><input type="radio" name="project_coolness" value="4"> Very cool</label>
+                </div>
+                <div class="poll-section">
+                    <h2>Did you like this class?</h2>
+                    <label><input type="radio" name="class_like" value="yes"> Yes</label>
+                    <label><input type="radio" name="class_like" value="no"> No</label>
+                </div>
+                <div class="buttons">
+                    <button type="button" onclick="location.href='/'">Back</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
