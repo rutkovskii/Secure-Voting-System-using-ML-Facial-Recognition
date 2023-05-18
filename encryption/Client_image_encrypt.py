@@ -64,4 +64,3 @@ with open('iv.bin', 'wb') as f:
 with open(output_path,'wb') as f:
 	f.write(face_encrypted)
 i+=1
-
