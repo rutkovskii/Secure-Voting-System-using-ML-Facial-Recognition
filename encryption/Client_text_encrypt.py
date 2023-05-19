@@ -22,7 +22,6 @@ public_server_msg_key_path = '/Users/braydenbergeron/PycharmProjects/547_Project
 
 with open(public_client_msg_key_path,'wb') as f:
 	f.write(public_client_msg_key)
-
 shutil.move(public_client_msg_key_path,decrypt_folder)
 while not os.path.exists(public_server_msg_key_path):
 	time.sleep(1)

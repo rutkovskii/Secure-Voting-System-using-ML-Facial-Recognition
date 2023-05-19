@@ -37,7 +37,6 @@ with open(file_path, "rb") as f: # read image jpeg
 	face_original = f.read()
 facehash = Image.open(file_path) # open image file again for hashing from bytes
 hash = int.from_bytes(hashlib.sha512(facehash.tobytes()).digest(),byteorder='big')
-#hash_bytes = bytes.fromhex(hash)
 digital_signature = pow(hash, key_pair.d,key_pair.n) # digital signature using private client key to sign
 
 with open('digital_signature.bin','wb') as f: # write the digital signature as a .bin

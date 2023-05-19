@@ -1,28 +1,34 @@
 from flask import *
-import base64
-import os
+import requests
+import json
+from client_encryption import encrypt_data
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
 
-users_data = []  #Initialize users_data as an empty list
+#Initialize users_data as an empty list
+users_data = []  
 
 @app.route("/")
 def start():
-    session['visited_start'] = True  #Set the flag that the user has visited the start page
+    #Set the flag that the user has visited the start page, then render page
+    session['visited_start'] = True  
     return render_template("start.html")
 
 @app.route("/details", methods=["GET", "POST"])
 def details():
+    #Check if the individual user already visited start
     if (not session.get('visited_start', False)):
         return redirect(url_for("start"))
     
-
     global users_data
 
+    #Create form identifier to determine if user is coming from "Start" or "Details"
     form_identifier = request.form.get("form_identifier")
 
+    #If user is being redirected from details due to errors
     if form_identifier == "details_form":
+        
         #Retrieve input data
         first_name = request.form.get("first_name")
         middle_name = request.form.get("middle_name")
@@ -34,16 +40,17 @@ def details():
         phone = request.form.get("phone")
         voter_id = request.form.get("voter_id")
 
-        #Input validation
+        #Data structure to hold errors
         errors = []
 
+        #Input validation function
         def check_input_length(value, max_len, field_name):
             if value is None or len(value) == 0:
                 errors.append(f"{field_name} requires a value")
             elif len(value) > max_len:
                 errors.append(f"{field_name} is too long")
 
-
+        #Perform input validation
         check_input_length(first_name, 50, "First name")
         check_input_length(last_name, 50, "Last name")
         check_input_length(street, 100, "Street")
@@ -53,7 +60,7 @@ def details():
         check_input_length(phone, 20, "Phone Number")
         check_input_length(voter_id, 20, "Voter ID")
 
-        #Check for errors
+        #IF not errors, store data for future use
         if not errors:
             data = {
                 "first_name": first_name,
@@ -68,12 +75,14 @@ def details():
                 "image": None
             }
 
+            #Store in global data variable
             users_data = data
 
+            #Set details flag, then redirect for picture
             session['submitted_details'] = True
-
             return redirect(url_for("capture"))  # Redirect to the capture page
         else:
+            #Display errors and redirect to details to try again
             for error in errors:
                 flash(error)
             return redirect(url_for("details"))
@@ -82,18 +91,21 @@ def details():
 
 @app.route('/capture')
 def capture():
+    #Check prerequisites are met
     if (
         not session.get('visited_start', False) or
         not session.get('submitted_details', False)
     ):
         return redirect(url_for("start"))
     
+    #Set session flag, then render page
     session['visited_capture'] = True
     
     return render_template("capture.html")
 
 @app.route('/save_image', methods=["POST"])
 def save_image():
+    #Check prerequisites are met
     if (
         not session.get('visited_start', False) or
         not session.get('submitted_details', False) or
@@ -103,25 +115,48 @@ def save_image():
 
     global users_data
 
-    image_data = request.form.get("image_data")
-    img_data = base64.b64decode(image_data.split(',')[1])
+    #Get image data from form and save it
+    users_data["image_data"] = request.form.get("image_data")
 
-    user_id = users_data['voter_id']
-    image_filename = f"photo_{user_id}.png"
+    #Send data to exteranal server for validataion
+    status = send_to_external_server(users_data)
 
-    with open(image_filename, 'wb') as f:
-        f.write(img_data)
+    #If data is valid, allow user to vote
+    if status == 'valid':
+        session['server_response_status'] = 'valid'
+        return redirect(url_for("vote"))
+    else:
+        #IF invalid data, redirect to details to try again
+        flash('Invalid data, please check your details and try again.')
+        return redirect(url_for("details"))
 
-    users_data['image'] = image_filename
+#Functions to handle server communication
+def send_to_external_server(data):
 
-    return redirect(url_for("vote"))
+    encrypted_data = encrypt_data(data)
+    #Set parameters for request then send
+    url = "http://localhost:8000/api/endpoint"  #Dummy address
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, data=json.dumps(encrypted_data))
+
+    #IF data is received by server correctly, return response
+    if response.status_code != 200:
+        print("Failed to send data to the external server.")
+        return 'invalid'
+    else:
+        #Notify user that data is invalid
+        print("Data successfully sent to the external server.")
+        response_data = response.json()
+        return response_data.get('status', 'invalid')
 
 @app.route('/vote')
 def vote():
+    #If prerequistes aren't met
     if (
         not session.get('visited_start', False) or
         not session.get('submitted_details', False) or
-        not session.get('visited_capture', False)
+        not session.get('visited_capture', False) or
+        not session.get('server_response_status', False) != 'valid'
     ):
         return redirect(url_for("start"))
     
@@ -133,10 +168,9 @@ def submit_vote():
     project_coolness = request.form.get('project_coolness')
     class_like = request.form.get('class_like')
 
-    # Store the votes in a database or another storage method
-    # ...
+    #Store the votes in a database or another storage method
 
-    # Redirect to a success or confirmation page (create one if necessary)
+    #Redirect to a success or confirmation page (create one if necessary)
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
