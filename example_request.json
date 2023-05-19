@@ -1,0 +1,12 @@
+{
+    'first_name': 'Alex', 
+    'middle_name': 'M', 
+    'last_name': 'Pratt', 
+    'street': '1 University Way', 
+    'city': 'Amherst', 
+    'zipcode': '01003', 
+    'state': 'MA', 
+    'phone': '123456789', 
+    'voter_id': '987654321', 
+    'image_data': 'Image data goes here'
+}
