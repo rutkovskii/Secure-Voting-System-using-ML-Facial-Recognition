@@ -13,23 +13,23 @@
         }
 
         .content-box {
-            background-color: lightgrey;
-            border: 1px solid black;
+            background-color: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             padding: 30px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            padding: 20px;
         }
 
         .poll-section {
@@ -39,11 +39,13 @@
 
         h2 {
             margin-bottom: 10px;
+            font-size: 1.2em;
         }
 
         label {
             display: block;
             margin-bottom: 5px;
+            font-size: 1.1em;
         }
 
         .buttons {
@@ -55,6 +57,30 @@
 
         button {
             padding: 10px 20px;
+            font-size: 1.1em;
+            background-color: #4285F4;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3367D6;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .thank-you {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
         }
     </style>
 </head>
@@ -62,7 +88,7 @@
     <div class="container">
         <div class="content-box">
             <h1>Vote</h1>
-            <form method="POST">
+            <form id="voteForm" method="post">
                 <div class="poll-section">
                     <h2>Class President</h2>
                     <label><input type="radio" name="president" value="candidate1"> Candidate 1</label>
@@ -86,7 +112,31 @@
                     <button type="submit">Submit</button>
                 </div>
             </form>
+            <div id="thankYouMessage" class="hidden thank-you">
+                Thank you for voting!
+            </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const voteForm = document.getElementById("voteForm");
+            const thankYouMessage = document.getElementById("thankYouMessage");
+
+            voteForm.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Perform form submission via AJAX or fetch
+                // ...
+
+                // Display thank you message and redirect after a delay
+                voteForm.classList.add("hidden");
+                thankYouMessage.classList.remove("hidden");
+
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 3000); // Redirect after 3 seconds (adjust as needed)
+            });
+        });
+    </script>
 </body>
 </html>

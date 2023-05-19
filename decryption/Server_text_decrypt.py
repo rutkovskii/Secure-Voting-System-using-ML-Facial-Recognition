@@ -6,35 +6,50 @@ from PIL import Image
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 import hashlib
-
-
+import shutil
 
 key_pair = RSA.generate(2048)
 public_server_msg_key = key_pair.publickey().export_key()
 private_server_msg_key = key_pair
-with open('/Volumes/BB/ML_Encryption/public_server_msg_key.pem','wb') as f:
+
+encrypt_folder = "/Users/braydenbergeron/PycharmProjects/547_Projects/encryption/"
+decrypt_folder = "/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/"
+
+public_server_msg_key_path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/public_server_msg_key.pem'
+public_client_msg_key_path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/public_client_msg_key.pem'
+
+with open(public_server_msg_key_path,'wb') as f:
 	f.write(public_server_msg_key)
-while not os.path.exists('/Volumes/BB/ML_Encryption/public_client_msg_key.pem'):
-    time.sleep(1)
-with open('/Volumes/BB/ML_Encryption/public_client_msg_key.pem', 'rb') as f:
+shutil.move(public_server_msg_key_path,encrypt_folder)
+
+while not os.path.exists(public_client_msg_key_path):
+	time.sleep(1)
+with open(public_client_msg_key_path, 'rb') as f:
 	public_client_key = RSA.importKey(f.read())
 
-while not os.path.exists('/Volumes/BB/ML_Encryption/digital_signature_msg.bin'):
-    time.sleep(1)
-with open('/Volumes/BB/ML_Encryption/digital_signature_msg.bin', 'rb') as f:
+digital_signature_msg_path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/digital_signature_msg.bin'
+while not os.path.exists(digital_signature_msg_path):
+	time.sleep(1)
+with open(digital_signature_msg_path, 'rb') as f:
+
 	digital_signature_msg = int.from_bytes(f.read(),byteorder='big')
 signature_hash_msg =  pow(digital_signature_msg,public_client_key.e,public_client_key.n)
 mode = AES.MODE_CBC
 keyLen = 32
 ivLen = AES.block_size
-with open("/Volumes/BB/ML_Encryption/Encrypted_AES_Key_msg.bin", 'rb') as f:
+
+Encrypted_AES_Key_msg_Path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/Encrypted_AES_Key_msg.bin'
+iv_msg_path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/iv_msg.bin'
+file_path = '/Users/braydenbergeron/PycharmProjects/547_Projects/decryption/encryped_message.bin'
+
+with open(Encrypted_AES_Key_msg_Path, 'rb') as f:
 	AESKey=f.read()
 cipherAES = PKCS1_OAEP.new(private_server_msg_key)
 key = cipherAES.decrypt(AESKey)
-with open("/Volumes/BB/ML_Encryption/iv_msg.bin", 'rb') as f:
+
+with open(iv_msg_path, 'rb') as f:
 	iv=f.read()
-image_path = "/Volumes/BB/ML_Encryption/encryped_message.bin"
-with open(image_path,'rb') as f:
+with open(file_path,'rb') as f:
 	Encrypted_message = f.read()
 # decrypt
 cipher = AES.new(key, AES.MODE_CBC, iv)
@@ -50,10 +65,15 @@ else:
 
 print(message_decrypted.decode('utf-8'))
 
-output_folder = "/Volumes/BB/ML_Encryption/message.txt"
-with open(output_folder, 'wb') as f:
+output_path = os.path.join(decrypt_folder,"voter_message.txt")
+with open(output_path, 'wb') as f:
 	f.write(message_decrypted)
 
-
-
+if (input("Remove[Y/N]")=="Y"):
+	os.remove(iv_msg_path) # delete the AES IV
+	os.remove(Encrypted_AES_Key_msg_Path) # delete the encrypted AES key ks+(kAES)
+	os.remove(public_client_msg_key_path) # delete the public client key Kc+
+	os.remove(file_path) # delete the encrypted image
+	os.remove(digital_signature_msg_path) # delete the digital signature
+	os.remove(output_path) # delete the decrypted image
 

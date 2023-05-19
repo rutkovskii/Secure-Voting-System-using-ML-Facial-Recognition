@@ -10,12 +10,8 @@ import time
 
 
 def encrypt_data(data):
-    key_pair = RSA.generate(2048)
-    public_client_key = key_pair.publickey().export_key()
-    with open('public_client_key.pem','wb') as f:
-        f.write(public_client_key)
-    while not os.path.exists('public_server_key.pem'):
-        time.sleep(1)
+    with open('private_client_msg_key.pem', 'rb') as f:
+        private_client_key = RSA.importKey(f.read())
     with open('public_server_msg_key.pem', 'rb') as f:
         public_server_key = RSA.importKey(f.read())
 
@@ -26,7 +22,9 @@ def encrypt_data(data):
 
     #Create hash and digital signature
     hash = int.from_bytes(hashlib.sha512(message).digest(),byteorder='big')
-    digital_signature_msg = pow(hash, key_pair.d,key_pair.n)
+
+    digital_signature_msg = pow(hash, private_client_key.d,private_client_key.n)
+
 
     #Create AES cipher and encrypt message
     key = get_random_bytes(keyLen)

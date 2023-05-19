@@ -72,7 +72,6 @@ def details():
                 "state": state,
                 "phone": phone,
                 "voter_id": voter_id,
-                "image": None
             }
 
             #Store in global data variable
@@ -118,6 +117,12 @@ def save_image():
     #Get image data from form and save it
     users_data["image_data"] = request.form.get("image_data")
 
+    users_data["image_data"] = "Image data goes here"
+    print("\n")
+    print("[+] START UNENCRYPTED DATA \n")
+    print(users_data)
+    print("[+] END UNENCRYPTED DATA \n")
+    print("\n")
     #Send data to exteranal server for validataion
     status = send_to_external_server(users_data)
 
@@ -134,6 +139,12 @@ def save_image():
 def send_to_external_server(data):
 
     encrypted_data = encrypt_data(data)
+    print("\n")
+    print("[+] START ENCRYPTED DATA \n")
+    print(encrypted_data)
+    print("[+] END UNENCRYPTED DATA \n")
+    print("\n")
+    
     #Set parameters for request then send
     url = "http://localhost:8000/api/endpoint"  #Dummy address
     headers = {'Content-Type': 'application/json'}
