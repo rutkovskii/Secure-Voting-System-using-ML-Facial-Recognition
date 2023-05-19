@@ -8,11 +8,13 @@ import json
 import os
 import time
 
+
 def encrypt_data(data):
     with open('private_client_msg_key.pem', 'rb') as f:
         private_client_key = RSA.importKey(f.read())
     with open('public_server_msg_key.pem', 'rb') as f:
         public_server_key = RSA.importKey(f.read())
+
     keyLen = 32
     ivLen = AES.block_size
     #Convert data to string with json.dumps, then to bytes
@@ -20,7 +22,9 @@ def encrypt_data(data):
 
     #Create hash and digital signature
     hash = int.from_bytes(hashlib.sha512(message).digest(),byteorder='big')
+
     digital_signature_msg = pow(hash, private_client_key.d,private_client_key.n)
+
 
     #Create AES cipher and encrypt message
     key = get_random_bytes(keyLen)

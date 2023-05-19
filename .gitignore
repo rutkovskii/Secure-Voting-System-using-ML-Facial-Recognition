@@ -1,3 +1,18 @@
+# Personal Files
+.DS_Store
+.idea
+/server/configs
+**/__pycache__/
+/docs/FREQUENT.md
+/server/docker
+/server/svenv
+docker
+server/.env
+docs/BeaverConnection.png
+.vscode
+server/volumes
+*.pem
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -116,6 +116,7 @@ def save_image():
 
     #Get image data from form and save it
     users_data["image_data"] = request.form.get("image_data")
+
     users_data["image_data"] = "Image data goes here"
     print("\n")
     print("[+] START UNENCRYPTED DATA \n")
@@ -143,6 +144,7 @@ def send_to_external_server(data):
     print(encrypted_data)
     print("[+] END UNENCRYPTED DATA \n")
     print("\n")
+    
     #Set parameters for request then send
     url = "http://localhost:8000/api/endpoint"  #Dummy address
     headers = {'Content-Type': 'application/json'}

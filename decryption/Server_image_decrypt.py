@@ -61,6 +61,7 @@ Face_decrypted = unpad(plaintext, AES.block_size)
 # integrity check
 
 output_path = os.path.join(decrypt_folder,"voter_image.jpg")
+
 with open(output_path, 'wb') as f:
 	f.write(Face_decrypted)
 
