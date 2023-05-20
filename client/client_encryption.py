@@ -35,8 +35,15 @@ def encrypt_data(data):
 
     #Return encrypted data
     return {
-        'digital_signature': digital_signature_msg.to_bytes(2048,byteorder='big'),
-        'msg_encrypted': msg_encryped,
-        'encrypted_key': Encrypted_AES_Key_msg,
-        'iv': iv
+        "digital_signature": digital_signature_msg,
+        "msg_encrypted": int.from_bytes(msg_encryped,byteorder='big'),
+        "encrypted_key": int.from_bytes(Encrypted_AES_Key_msg,byteorder='big'),
+        "iv": int.from_bytes(iv,byteorder='big')
     }
+
+
+'''with open('example_request.json') as user_file:
+  f = user_file.read()
+x=encrypt_data(f)
+with open('json_test.json', "w") as file:
+    json.dump(x, file)'''
