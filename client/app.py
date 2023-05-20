@@ -11,6 +11,7 @@ users_data = []
 
 @app.route("/")
 def start():
+    session.clear()
     #Set the flag that the user has visited the start page, then render page
     session['visited_start'] = True  
     return render_template("start.html")
@@ -72,7 +73,6 @@ def details():
                 "state": state,
                 "phone": phone,
                 "voter_id": voter_id,
-                "image": None
             }
 
             #Store in global data variable
@@ -119,14 +119,13 @@ def save_image():
     users_data["image_data"] = request.form.get("image_data")
 
     #Send data to exteranal server for validataion
-    status = send_to_external_server(users_data)
-
-    #If data is valid, allow user to vote
+    status, token = send_to_external_server(users_data)
+    
     if status == 'valid':
         session['server_response_status'] = 'valid'
+        session['token'] = token  # store the received token in session
         return redirect(url_for("vote"))
     else:
-        #IF invalid data, redirect to details to try again
         flash('Invalid data, please check your details and try again.')
         return redirect(url_for("details"))
 
@@ -168,10 +167,26 @@ def submit_vote():
     project_coolness = request.form.get('project_coolness')
     class_like = request.form.get('class_like')
 
-    #Store the votes in a database or another storage method
+    # package the vote choices into a dictionary
+    vote_data = {
+        'president': president,
+        'project_coolness': project_coolness,
+        'class_like': class_like,
+    }
 
-    #Redirect to a success or confirmation page (create one if necessary)
-    return redirect(url_for('home'))
+    # encrypt the vote data
+    encrypted_vote_data = encrypt_data(vote_data)
+
+    # send the encrypted vote data and token to the server
+    url = "http://localhost:8000/api/vote_endpoint"  # dummy address
+    headers = {'Content-Type': 'application/json'}
+    data = json.dumps({'vote_data': encrypted_vote_data, 'token': session['token']})
+    response = requests.post(url, headers=headers, data=data)
+
+    if response.status_code != 200:
+        flash("Failed to submit vote.")
+        return redirect(url_for('vote'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,5 +1,7 @@
+import os
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
+import time
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 import hashlib
@@ -61,7 +63,3 @@ data=decrypted_data.get('msg_decrypted').replace("'",'"')
 user_data = json.loads(data) # load the json of user data
 print(user_data.get("image_data")) # can print any json of user data attributed
 '''
-
-
-
-
