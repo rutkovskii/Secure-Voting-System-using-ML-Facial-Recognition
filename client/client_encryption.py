@@ -41,7 +41,6 @@ def encrypt_data(data):
         "iv": int.from_bytes(iv,byteorder='big')
     }
 
-
 '''with open('example_request.json') as user_file:
   f = user_file.read()
 x=encrypt_data(f)
