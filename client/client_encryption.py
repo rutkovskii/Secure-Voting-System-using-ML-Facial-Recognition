@@ -18,6 +18,7 @@ def encrypt_data(data):
     keyLen = 32
     ivLen = AES.block_size
     #Convert data to string with json.dumps, then to bytes
+    print(len(data))
     message = bytes(json.dumps(data), 'utf-8')
 
     #Create hash and digital signature

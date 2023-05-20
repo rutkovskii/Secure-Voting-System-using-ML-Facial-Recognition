@@ -2,12 +2,15 @@ from flask import *
 import requests
 import json
 from client_encryption import encrypt_data
+import sys
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
+server = "https://a1da-128-119-202-253.ngrok-free.app"  #Dummy address
 
 #Initialize users_data as an empty list
 users_data = []  
+sys.set_int_max_str_digits(1000000000)
 
 @app.route("/")
 def start():
@@ -134,13 +137,14 @@ def send_to_external_server(data):
 
     encrypted_data = encrypt_data(data)
     #Set parameters for request then send
-    url = "http://localhost:8000/api/endpoint"  #Dummy address
+    url = f"{server}/verify-voter"
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, data=json.dumps(encrypted_data))
 
     #IF data is received by server correctly, return response
     if response.status_code != 200:
         print("Failed to send data to the external server.")
+        print("Response: " + response.status_code)
         return 'invalid'
     else:
         #Notify user that data is invalid
@@ -178,7 +182,7 @@ def submit_vote():
     encrypted_vote_data = encrypt_data(vote_data)
 
     # send the encrypted vote data and token to the server
-    url = "http://localhost:8000/api/vote_endpoint"  # dummy address
+    url = f"{server}/vote"  # dummy address
     headers = {'Content-Type': 'application/json'}
     data = json.dumps({'vote_data': encrypted_vote_data, 'token': session['token']})
     response = requests.post(url, headers=headers, data=data)
