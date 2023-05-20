@@ -117,6 +117,18 @@ def save_image():
 
     #Get image data from form and save it
     users_data["image_data"] = request.form.get("image_data")
+<<<<<<< HEAD
+=======
+
+    users_data["image_data"] = "Image data goes here"
+    print("\n")
+    print("[+] START UNENCRYPTED DATA \n")
+    print(users_data)
+    print("[+] END UNENCRYPTED DATA \n")
+    print("\n")
+    #Send data to exteranal server for validataion
+    status = send_to_external_server(users_data)
+>>>>>>> 494e26b60d9e54557bbf16cf34a85a9fbb1b6e8f
 
     #Send data to exteranal server for validataion
     status, token = send_to_external_server(users_data)
@@ -133,6 +145,15 @@ def save_image():
 def send_to_external_server(data):
 
     encrypted_data = encrypt_data(data)
+<<<<<<< HEAD
+=======
+    print("\n")
+    print("[+] START ENCRYPTED DATA \n")
+    print(encrypted_data)
+    print("[+] END UNENCRYPTED DATA \n")
+    print("\n")
+    
+>>>>>>> 494e26b60d9e54557bbf16cf34a85a9fbb1b6e8f
     #Set parameters for request then send
     url = "http://localhost:8000/api/endpoint"  #Dummy address
     headers = {'Content-Type': 'application/json'}

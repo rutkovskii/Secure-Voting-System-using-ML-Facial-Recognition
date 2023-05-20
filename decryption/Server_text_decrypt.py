@@ -31,6 +31,7 @@ digital_signature_msg_path = '/Users/braydenbergeron/PycharmProjects/547_Project
 while not os.path.exists(digital_signature_msg_path):
 	time.sleep(1)
 with open(digital_signature_msg_path, 'rb') as f:
+
 	digital_signature_msg = int.from_bytes(f.read(),byteorder='big')
 signature_hash_msg =  pow(digital_signature_msg,public_client_key.e,public_client_key.n)
 mode = AES.MODE_CBC
@@ -75,7 +76,4 @@ if (input("Remove[Y/N]")=="Y"):
 	os.remove(file_path) # delete the encrypted image
 	os.remove(digital_signature_msg_path) # delete the digital signature
 	os.remove(output_path) # delete the decrypted image
-
-
-
 
