@@ -6,17 +6,17 @@
     <title>Start Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            background-image: url('./Secure-Voting-System-using-ML-Facial-Recognition/client/images/umass_amherst.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            background-color: #B31B1B; /* UMASS red */
         }
 
         .content {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: #FFFFFF;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             padding: 30px;
@@ -25,20 +25,20 @@
             flex-direction: column;
             align-items: center;
             max-width: 600px;
-            margin: 0 auto;
-            margin-top: 100px;
-            text-align: center;
         }
 
         h1 {
+            text-align: center;
             margin-bottom: 20px;
         }
 
         p {
             margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.1em;
         }
 
-        button {
+        .button {
             padding: 10px 20px;
             font-size: 1.1em;
             background-color: #4285F4;
@@ -48,11 +48,11 @@
             cursor: pointer;
         }
 
-        button:hover {
+        .button:hover {
             background-color: #3367D6;
         }
 
-        button:focus {
+        .button:focus {
             outline: none;
         }
     </style>
@@ -61,7 +61,7 @@
     <div class="content">
         <h1>Welcome to UMASS Voting</h1>
         <p>Get ready to cast your vote!</p>
-        <button onclick="location.href='/details'">Start</button>
+        <button class="button" onclick="location.href='/details'">Start</button>
     </div>
 </body>
 </html>
