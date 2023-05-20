@@ -25,7 +25,6 @@ def encrypt_data(data):
 
     digital_signature_msg = pow(hash, private_client_key.d,private_client_key.n)
 
-
     #Create AES cipher and encrypt message
     key = get_random_bytes(keyLen)
     iv = get_random_bytes(ivLen)
