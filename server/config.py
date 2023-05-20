@@ -10,6 +10,8 @@ class Config:
     CONFIG_DIR = os.path.join(SERVER_DIR, "configs")
     VOLUMES_DIR = os.path.join(SERVER_DIR, "volumes")
     LOGS_DIR = os.path.join(VOLUMES_DIR, "logs")
+    APP_DIR = os.path.join(SERVER_DIR, "app")
+    COMPARE_DIR = os.path.join(APP_DIR, "compare")
 
     ENVIRONMENT = os.getenv("ENVIRONMENT")
     DATABASE_URI = "postgresql+psycopg2://ubuntu:ubuntu@postgres:5432/postgresDB"
