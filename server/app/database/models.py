@@ -1,14 +1,19 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, Float, String, DateTime, Date, Time, Boolean, LargeBinary
-from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Boolean,
+    LargeBinary,
+)
 
 
 Base = declarative_base()
 
 
-class User(Base):
+class People(Base):
     __tablename__ = "People"
+    id = Column(Integer, primary_key=True)  # This is a new line
     first_name = Column(String, nullable=False)
     middle_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
@@ -23,10 +28,8 @@ class User(Base):
     voted_for = Column(String, nullable=True)
     token = Column(String, nullable=False)
 
-
     def __repr__(self):
-        return f"<User {self.first_name} {self.last_name}>"
-    
+        return f"<Person {self.first_name} {self.last_name}>"
+
     def get_profile_pic(self):
         return self.profile_pic
-    

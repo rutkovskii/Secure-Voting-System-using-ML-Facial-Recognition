@@ -22,19 +22,19 @@ services:
       POSTGRES_USER: ubuntu
       POSTGRES_PASSWORD: ubuntu
       POSTGRES_DB: postgresDB
-      # TZ: America/New_York
+      TZ: America/New_York
     ports:
       - "5432:5432"
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/data
 
-
   server:
     container_name: server-api
-    # platform: linux/arm64/v8
     build:
       context: .
     image: vote-server-img
+    environment:
+      TZ: America/New_York
     ports:
       - "5000:5000"
     depends_on:
