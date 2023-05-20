@@ -1,0 +1,1 @@
+{"verified": 1, "msg_decrypted": "{\n    'first_name': 'Alex', \n    'middle_name': 'M', \n    'last_name': 'Pratt', \n    'street': '1 University Way', \n    'city': 'Amherst', \n    'zipcode': '01003', \n    'state': 'MA', \n    'phone': '123456789', \n    'voter_id': '987654321', \n    'image_data': 'Image data goes here'\n}"}

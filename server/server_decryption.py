@@ -46,7 +46,7 @@ def decrypt_data(data):
         'msg_decrypted':json.loads(bytes.decode((message_decrypted),'utf-8'))
     }
 
-'''
+
 # testing
 # open encryped json
 with open('../client/json_test.json') as user_file: # replace with json open
@@ -61,5 +61,5 @@ print(decrypted_data.get('verified'))
 # get the json inside of this json of user input data
 data=decrypted_data.get('msg_decrypted').replace("'",'"')
 user_data = json.loads(data) # load the json of user data
-print(user_data.get("image_data")) # can print any json of user data attributed
-'''
+print(user_data.get("first_name")) # can print any json of user data attributed
+
