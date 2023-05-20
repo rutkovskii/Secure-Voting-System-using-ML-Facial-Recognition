@@ -5,6 +5,7 @@ from contextlib import contextmanager
 # When running run.py
 from app.database.models import Base, People
 from config import Config
+import os
 from app.server_logger import setup_logger
 
 logger = setup_logger(__name__, "database.log")
@@ -27,21 +28,23 @@ def prefill_people():
             first_name="Aleksei",
             last_name="Rutkovskii",
             voter_id="32369635",
-            profile_pic=add_profile_pic("app/database/assets/Aleksei.jpg"),
+            profile_pic=add_profile_pic(
+                os.path.join(Config.ASSETS_DIR, "Aleksei.jpeg")
+            ),
             voted=False,
         ),
         People(
             first_name="Daniel",
             last_name="Doe",
             voter_id="0000",
-            profile_pic=add_profile_pic("app/database/assets/Daniel.jpg"),
+            profile_pic=add_profile_pic(os.path.join(Config.ASSETS_DIR, "Daniel.jpeg")),
             voted=False,
         ),
         People(
             first_name="Brayden",
-            last_name="Doe",
+            last_name="Bergeron",
             voter_id="0001",
-            profile_pic=add_profile_pic("app/database/assets/Brayden.jpg"),
+            profile_pic=add_profile_pic(os.path.join(Config.ASSETS_DIR, "Brayden.png")),
             voted=False,
         ),
     ]

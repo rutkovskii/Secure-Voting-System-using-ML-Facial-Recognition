@@ -5,10 +5,16 @@ import secrets
 import os
 from app.rekognition.rekognition_image_detection import RekognitionImage
 from config import Config
+from app.server_logger import setup_logger
+
+logger = setup_logger(__name__, "utils.log")
 
 
 def accept_vote_func(data):
     """Accept the vote."""
+
+    logger.info("Accepting vote")
+
     with session_scope() as session:
         voter = (
             # Check based on voter_id and name
@@ -37,6 +43,9 @@ def accept_vote_func(data):
 
 def verify_voter_func(data):
     """Verify the voter's identity."""
+
+    logger.info("Verifying voter")
+
     with session_scope() as session:
         voter = (
             # Check based on voter_id and name
@@ -74,6 +83,8 @@ def verify_voter_func(data):
 
         # Commit the changes
         session.commit()
+
+        logger.info("Voter verified")
 
         return {"verified": True, "token": token, "error": None}
 

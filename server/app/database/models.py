@@ -13,20 +13,20 @@ Base = declarative_base()
 
 class People(Base):
     __tablename__ = "People"
-    id = Column(Integer, primary_key=True)  # This is a new line
+    id = Column(Integer, primary_key=True)
     first_name = Column(String, nullable=False)
-    middle_name = Column(String, nullable=False)
+    middle_name = Column(String, nullable=True)
     last_name = Column(String, nullable=False)
-    street = Column(String, nullable=False)
-    city = Column(String, nullable=False)
-    zipcode = Column(String, nullable=False)
-    state = Column(String, nullable=False)
-    phone = Column(String, nullable=False)
+    street = Column(String, nullable=True)
+    city = Column(String, nullable=True)
+    zipcode = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
     voter_id = Column(String, nullable=False)
     profile_pic = Column(LargeBinary, nullable=True)
     voted = Column(Boolean, nullable=False, default=False)
     voted_for = Column(String, nullable=True)
-    token = Column(String, nullable=False)
+    token = Column(String, nullable=True)
 
     def __repr__(self):
         return f"<Person {self.first_name} {self.last_name}>"
