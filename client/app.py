@@ -7,7 +7,7 @@ import sys
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
-server = "http://0.0.0.0:5000"  # Dummy address
+server = "https://90b5-128-119-202-253.ngrok-free.app"  # Dummy address
 
 # Initialize users_data as an empty list
 users_data = []
