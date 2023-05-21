@@ -2,6 +2,7 @@ import logging
 import os
 from config import Config
 from functools import wraps
+from traceback import format_exc
 
 
 def setup_logger(name, log_file, level=logging.DEBUG):
@@ -13,7 +14,7 @@ def setup_logger(name, log_file, level=logging.DEBUG):
     log_file_path = os.path.join(logs_directory, log_file)
 
     # handler = logging.FileHandler(log_file_path)
-    handler = logging.FileHandler(log_file_path, mode="w")
+    handler = logging.FileHandler(log_file_path, mode="a")
 
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -32,8 +33,8 @@ def log_errors(logger):
             try:
                 return f(*args, **kwargs)
             except Exception as e:
-                logger.exception("An error occurred: %s", e)
-                # return jsonify({"error": "An unexpected error occurred"}), 500
+                logger.error("An error occurred: %s", format_exc())
+                # logger.exception("An error occurred: %s", e)
 
         return decorated_function
 

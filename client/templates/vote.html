@@ -1,142 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vote</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #B31B1B; /* UMASS red */
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #b31b1b; /* UMASS red */
+      }
 
-        .content-box {
-            background-color: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+      .content-box {
+        background-color: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
 
-        .poll-section {
-            width: 100%;
-            margin-bottom: 20px;
-        }
+      .poll-section {
+        width: 100%;
+        margin-bottom: 20px;
+      }
 
-        h2 {
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
+      h2 {
+        margin-bottom: 10px;
+        font-size: 1.2em;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 1.1em;
-        }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+      }
 
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: center;
-        }
+      .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+      }
 
-        button {
-            padding: 10px 20px;
-            font-size: 1.1em;
-            background-color: #4285F4;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+      button {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        background-color: #4285f4;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
 
-        button:hover {
-            background-color: #3367D6;
-        }
+      button:hover {
+        background-color: #3367d6;
+      }
 
-        button:focus {
-            outline: none;
-        }
+      button:focus {
+        outline: none;
+      }
 
-        .hidden {
-            display: none;
-        }
+      .hidden {
+        display: none;
+      }
 
-        .thank-you {
-            margin-top: 20px;
-            font-size: 1.2em;
-            text-align: center;
-        }
+      .thank-you {
+        margin-top: 20px;
+        font-size: 1.2em;
+        text-align: center;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="content-box">
-            <h1>Vote</h1>
-            <form id="voteForm" method="post">
-                <div class="poll-section">
-                    <h2>Class President</h2>
-                    <label><input type="radio" name="president" value="candidate1"> Candidate 1</label>
-                    <label><input type="radio" name="president" value="candidate2"> Candidate 2</label>
-                    <label><input type="radio" name="president" value="candidate3"> Candidate 3</label>
-                </div>
-                <div class="poll-section">
-                    <h2>How cool is this project?</h2>
-                    <label><input type="radio" name="project_coolness" value="1"> Not cool at all</label>
-                    <label><input type="radio" name="project_coolness" value="2"> Somewhat cool</label>
-                    <label><input type="radio" name="project_coolness" value="3"> Cool</label>
-                    <label><input type="radio" name="project_coolness" value="4"> Very cool</label>
-                </div>
-                <div class="poll-section">
-                    <h2>Did you like this class?</h2>
-                    <label><input type="radio" name="class_like" value="yes"> Yes</label>
-                    <label><input type="radio" name="class_like" value="no"> No</label>
-                </div>
-                <div class="buttons">
-                    <button type="button" onclick="location.href='/'">Back</button>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-            <div id="thankYouMessage" class="hidden thank-you">
-                Thank you for voting!
-            </div>
+      <div class="content-box">
+        <h1>Vote</h1>
+        <form id="voteForm" method="post">
+          <div class="poll-section">
+            <h2>Class President</h2>
+            <label
+              ><input type="radio" name="president" value="candidate1" />
+              Candidate 1</label
+            >
+            <label
+              ><input type="radio" name="president" value="candidate2" />
+              Candidate 2</label
+            >
+            <label
+              ><input type="radio" name="president" value="candidate3" />
+              Candidate 3</label
+            >
+          </div>
+          <div class="poll-section">
+            <h2>How cool is this project?</h2>
+            <label
+              ><input type="radio" name="project_coolness" value="1" /> Not cool
+              at all</label
+            >
+            <label
+              ><input type="radio" name="project_coolness" value="2" /> Somewhat
+              cool</label
+            >
+            <label
+              ><input type="radio" name="project_coolness" value="3" />
+              Cool</label
+            >
+            <label
+              ><input type="radio" name="project_coolness" value="4" /> Very
+              cool</label
+            >
+          </div>
+          <div class="poll-section">
+            <h2>Did you like this class?</h2>
+            <label
+              ><input type="radio" name="class_like" value="yes" /> Yes</label
+            >
+            <label
+              ><input type="radio" name="class_like" value="no" /> No</label
+            >
+          </div>
+          <div class="buttons">
+            <button type="button" onclick="location.href='/'">Back</button>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+        <div id="thankYouMessage" class="hidden thank-you">
+          Thank you for voting!
         </div>
+      </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const voteForm = document.getElementById("voteForm");
-            const thankYouMessage = document.getElementById("thankYouMessage");
+      document.addEventListener("DOMContentLoaded", function () {
+        const voteForm = document.getElementById("voteForm");
+        const thankYouMessage = document.getElementById("thankYouMessage");
 
-            voteForm.addEventListener("submit", function(event) {
-                event.preventDefault(); // Prevent form submission
+        voteForm.addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent form submission
 
-                // Perform form submission via AJAX or fetch
-                // ...
+          console.log(voteForm);
 
-                // Display thank you message and redirect after a delay
-                voteForm.classList.add("hidden");
-                thankYouMessage.classList.remove("hidden");
+          // Get form data
+          const formData = new FormData(voteForm);
 
-                setTimeout(function() {
-                    window.location.href = "/";
-                }, 3000); // Redirect after 3 seconds (adjust as needed)
+          const data = {
+            voted_for: formData.get("president"),
+            project_coolness: formData.get("project_coolness"),
+            class_like: formData.get("class_like"),
+          };
+
+          // Send data to the server using fetch API
+          fetch("/submit_vote", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // if (data.status != 200) {
+              //   throw Error("Failed to submit vote.");
+              // }
+
+              // Display thank you message and redirect after a delay
+              voteForm.classList.add("hidden");
+              thankYouMessage.classList.remove("hidden");
+
+              setTimeout(function () {
+                window.location.href = "/";
+              }, 3000); // Redirect after 3 seconds (adjust as needed)
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Failed to submit vote.");
             });
         });
+      });
     </script>
-</body>
+  </body>
 </html>

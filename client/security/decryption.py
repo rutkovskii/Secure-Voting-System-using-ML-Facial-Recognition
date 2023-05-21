@@ -6,20 +6,16 @@ import hashlib
 import json
 import os
 
-from app.server_logger import setup_logger, log_errors
 from config import Config
 
-logger = setup_logger(__name__, "server.log")
 
-
-@log_errors(logger)
 def decrypt_data(data):
     with open(
-        os.path.join(Config.SECURITY_DIR, "private_server_msg_key.pem"), "rb"
+        os.path.join(Config.SECURITY_DIR, "private_client_msg_key.pem"), "rb"
     ) as f:
         private_key = RSA.importKey(f.read())
     with open(
-        os.path.join(Config.SECURITY_DIR, "public_client_msg_key.pem"), "rb"
+        os.path.join(Config.SECURITY_DIR, "public_server_msg_key.pem"), "rb"
     ) as f:
         public_key = RSA.importKey(f.read())
 
@@ -68,17 +64,17 @@ def decrypt_data(data):
     }
 
 
-@log_errors(logger)
 def decrypt_data_full(json_message):
     # Decrypting the data
-    d_data = decrypt_data(json_message)
+    d_data = decrypt_data(json_message.replace("'", '"'))
     decrypted_data = json.dumps(d_data)
     decrypted_data = json.loads(decrypted_data)  # verified, msg_decrypted
-    data = str(decrypted_data.get("msg_decrypted")).replace("'", '"')
-
-    payload = json.loads(data)  # {"verified": True, "token": token, "error": None}
-
-    return payload
+    data = decrypted_data.get("msg_decrypted")
+    return data
+    # data = decrypted_data.get("msg_decrypted").replace("'", '"')
+    # print(data)
+    # payload = json.loads(data)  # {"verified": True, "token": token, "error": None}
+    # return payload
 
 
 """# testing

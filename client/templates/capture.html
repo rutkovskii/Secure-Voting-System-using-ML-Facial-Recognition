@@ -1,160 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Capture</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #B31B1B; /* UMASS red */
-        }
+      .loader {
+        display: none; /* Hidden by default */
+        position: fixed; /* Full-width and full-height */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
 
-        .box {
-            background-color: #FFFFFF;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 640px;
-            margin: 0 auto;
-        }
+      .spinner {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+      }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
 
-        #videoElement, #capturedImage {
-            width: 100%;
-            max-width: 640px;
-            height: auto;
-            border: 1px solid black;
-            margin-bottom: 20px;
-        }
+      .loader p {
+        color: white;
+        font-size: 20px;
+        margin-top: 20px;
+      }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #b31b1b; /* UMASS red */
+      }
 
-        button {
-            padding: 10px 20px;
-            font-size: 1.1em;
-            background-color: #4285F4;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+      .box {
+        background-color: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 640px;
+        margin: 0 auto;
+      }
 
-        button:hover {
-            background-color: #3367D6;
-        }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
 
-        button:focus {
-            outline: none;
-        }
+      #videoElement,
+      #capturedImage {
+        width: 100%;
+        max-width: 640px;
+        height: auto;
+        border: 1px solid black;
+        margin-bottom: 20px;
+      }
 
-        #retakePhoto,
-        #usePhoto {
-            display: none;
-        }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1.1em;
+        background-color: #4285f4;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #3367d6;
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      #retakePhoto,
+      #usePhoto {
+        display: none;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="box">
-            <video autoplay="true" id="videoElement"></video>
-            <canvas id="canvas" style="display:none;"></canvas>
-            <img id="capturedImage" style="display:none;">
-            <div class="buttons">
-                <button id="backButton">Back</button>
-                <button id="takePhoto">Take Photo</button>
-                <button id="retakePhoto">Retake Photo</button>
-                <button id="usePhoto">Use This Photo</button>
-            </div>
+      <div class="box">
+        <video autoplay="true" id="videoElement"></video>
+        <canvas id="canvas" style="display: none"></canvas>
+        <img id="capturedImage" style="display: none" />
+        <div class="buttons">
+          <button id="backButton">Back</button>
+          <button id="takePhoto">Take Photo</button>
+          <button id="retakePhoto">Retake Photo</button>
+          <button id="usePhoto">Use This Photo</button>
         </div>
+      </div>
+      <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <p>Please wait until your details are verified</p>
+      </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const video = document.getElementById("videoElement");
-            const canvas = document.getElementById("canvas");
-            const capturedImage = document.getElementById("capturedImage");
-            const takePhoto = document.getElementById("takePhoto");
-            const backButton = document.getElementById("backButton");
-            const retakePhoto = document.getElementById("retakePhoto");
-            const usePhoto = document.getElementById("usePhoto");
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("videoElement");
+        const canvas = document.getElementById("canvas");
+        const capturedImage = document.getElementById("capturedImage");
+        const takePhoto = document.getElementById("takePhoto");
+        const backButton = document.getElementById("backButton");
+        const retakePhoto = document.getElementById("retakePhoto");
+        const usePhoto = document.getElementById("usePhoto");
 
-            if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                        video.srcObject = stream;
-                    })
-                    .catch(function (error) {
-                        console.error("Error accessing camera:", error);
-                    });
-            }
-
-            takePhoto.addEventListener("click", function() {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext("2d").drawImage(video, 0, 0);
-                capturedImage.src = canvas.toDataURL("image/png");
-                capturedImage.style.display = "block";
-                video.style.display = "none";
-                takePhoto.style.display = "none";
-                retakePhoto.style.display = "inline-block";
-                usePhoto.style.display = "inline-block";
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(function (stream) {
+              video.srcObject = stream;
+            })
+            .catch(function (error) {
+              console.error("Error accessing camera:", error);
             });
+        }
 
-            backButton.addEventListener("click", function() {
-                window.location.href = "/details";
-            });
+        takePhoto.addEventListener("click", function () {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          canvas.getContext("2d").drawImage(video, 0, 0);
+          capturedImage.src = canvas.toDataURL("image/png");
+          capturedImage.style.display = "block";
+          video.style.display = "none";
+          takePhoto.style.display = "none";
+          retakePhoto.style.display = "inline-block";
+          usePhoto.style.display = "inline-block";
+        });
 
-            retakePhoto.addEventListener("click", function() {
-                video.style.display = "block";
-                capturedImage.style.display = "none";
-                takePhoto.style.display = "inline-block";
-                retakePhoto.style.display = "none";
-                usePhoto.style.display = "none";
-            });
+        backButton.addEventListener("click", function () {
+          window.location.href = "/details";
+        });
 
-            usePhoto.addEventListener("click", function() {
-                const imageData = capturedImage.src;
+        retakePhoto.addEventListener("click", function () {
+          video.style.display = "block";
+          capturedImage.style.display = "none";
+          takePhoto.style.display = "inline-block";
+          retakePhoto.style.display = "none";
+          usePhoto.style.display = "none";
+        });
 
-                fetch('/save_image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'image_data=' + encodeURIComponent(imageData)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Failed to save image');
-                    }
-                })
-                .then(data => {
-                    // Handle successful image saving, e.g., redirect to the voting page
-                    window.location.href = "/vote";
-                })
-                .catch(error => {
-                    console.error('Error saving image:', error);
-                    // Handle error, e.g., display an error message
-                });
+        usePhoto.addEventListener("click", function () {
+          const imageData = capturedImage.src;
+          const loader = document.getElementById("loader");
+
+          // Show the loader
+          loader.style.display = "flex";
+
+          fetch("/save_image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: "image_data=" + encodeURIComponent(imageData),
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.text();
+              } else {
+                throw new Error("Failed to save image");
+              }
+            })
+            .then((data) => {
+              // Hide the loader
+              loader.style.display = "none";
+
+              // Handle successful image saving, e.g., redirect to the voting page
+              window.location.href = "/vote";
+            })
+            .catch((error) => {
+              // Hide the loader
+              loader.style.display = "none";
+
+              console.error("Error saving image:", error);
+              // Handle error, e.g., display an error message
             });
         });
+      });
     </script>
-</body>
+  </body>
 </html>

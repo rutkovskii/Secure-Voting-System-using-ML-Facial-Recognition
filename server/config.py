@@ -14,6 +14,7 @@ class Config:
     COMPARE_DIR = os.path.join(APP_DIR, "compare")
     DATABASE_DIR = os.path.join(APP_DIR, "database")
     ASSETS_DIR = os.path.join(DATABASE_DIR, "assets")
+    SECURITY_DIR = os.path.join(APP_DIR, "security")
 
     ENVIRONMENT = os.getenv("ENVIRONMENT")
     DATABASE_URI = "postgresql+psycopg2://ubuntu:ubuntu@postgres:5432/postgresDB"
@@ -25,3 +26,4 @@ class Config:
     VOTE_ROUTE = "/vote"
     VERIFY_ROUTE = "/verify-voter"
     INDEX_ROUTE = "/"
+    RESULTS_ROUTE = "/results"

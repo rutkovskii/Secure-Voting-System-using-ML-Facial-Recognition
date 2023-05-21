@@ -3,11 +3,15 @@ from app.database.models import People
 import boto3
 import secrets
 import os
+import base64
 from app.rekognition.rekognition_image_detection import RekognitionImage
 from config import Config
 from app.server_logger import setup_logger
+from dotenv import load_dotenv
 
 logger = setup_logger(__name__, "utils.log")
+
+load_dotenv()
 
 
 def accept_vote_func(data):
@@ -25,8 +29,12 @@ def accept_vote_func(data):
             .first()
         )
 
+        logger.info("Successfully queried database")
+
         if not voter:
             return {"accepted": False, "error": "Voter not found"}
+
+        logger.info("Successfully found voter")
 
         if voter.voted:
             return {"accepted": False, "error": "Voter has voted"}
@@ -37,6 +45,8 @@ def accept_vote_func(data):
 
         # Commit the changes
         session.commit()
+
+        logger.info("Successfully committed changes")
 
         return {"accepted": True, "error": None}
 
@@ -89,14 +99,18 @@ def verify_voter_func(data):
         return {"verified": True, "token": token, "error": None}
 
 
-def compare_images(profile_image, voting_image):
+def compare_images(profile_image_path, voting_image_path):
     """Compare two images."""
 
-    rekognition_client = boto3.client("rekognition")
-
-    profile_image_aws = RekognitionImage(
-        {"Bytes": profile_image.content}, "voting", rekognition_client
+    rekognition_client = boto3.client(
+        "rekognition", region_name=os.getenv("AWS_REGION")
     )
+
+    profile_image_aws = RekognitionImage.from_file(
+        profile_image_path, rekognition_client
+    )
+
+    voting_image = RekognitionImage.from_file(voting_image_path, rekognition_client)
 
     matches, unmatches = profile_image_aws.compare_faces(
         target_image=voting_image, similarity=80
@@ -113,22 +127,22 @@ def generate_random_string(length=8):
     return secrets.token_hex(length)
 
 
-def saveNcompare(profile_image, voting_image):
+def saveNcompare(profile_image, voting_image_base64):
     rand_str = generate_random_string()
 
     # save images locally to read
-
-    profile_image_path = os.paths.join(
+    profile_image_path = os.path.join(
         Config.COMPARE_DIR, f"profile_image_{rand_str}.jpg"
     )
     with open(profile_image_path, "wb") as f:
-        f.write(profile_image.content)
+        f.write(profile_image)  # write bytes directly
 
-    voting_image_path = os.paths.join(
-        Config.COMPARE_DIR, f"voting_image_{rand_str}.jpg"
-    )
+    voting_image_path = os.path.join(Config.COMPARE_DIR, f"voting_image_{rand_str}.jpg")
     with open(voting_image_path, "wb") as f:
-        f.write(voting_image.content)
+        voting_image = base64.b64decode(
+            voting_image_base64.split(",")[-1]
+        )  # Decode the base64 image
+        f.write(voting_image)
 
     match = compare_images(profile_image_path, voting_image_path)
 

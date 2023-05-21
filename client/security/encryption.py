@@ -6,25 +6,29 @@ from Crypto.PublicKey import RSA
 import hashlib
 import json
 import os
-import time
+
+from config import Config
 
 
 def encrypt_data(data):
-    with open("private_client_msg_key.pem", "rb") as f:
-        private_client_key = RSA.importKey(f.read())
-    with open("public_server_msg_key.pem", "rb") as f:
-        public_server_key = RSA.importKey(f.read())
+    with open(
+        os.path.join(Config.SECURITY_DIR, "private_client_msg_key.pem"), "rb"
+    ) as f:
+        private_key = RSA.importKey(f.read())
+    with open(
+        os.path.join(Config.SECURITY_DIR, "public_server_msg_key.pem"), "rb"
+    ) as f:
+        public_key = RSA.importKey(f.read())
 
     keyLen = 32
     ivLen = AES.block_size
     # Convert data to string with json.dumps, then to bytes
-    print(len(data))
     message = bytes(json.dumps(data), "utf-8")
 
     # Create hash and digital signature
     hash = int.from_bytes(hashlib.sha512(message).digest(), byteorder="big")
 
-    digital_signature_msg = pow(hash, private_client_key.d, private_client_key.n)
+    digital_signature_msg = pow(hash, private_key.d, private_key.n)
 
     # Create AES cipher and encrypt message
     key = get_random_bytes(keyLen)
@@ -34,7 +38,7 @@ def encrypt_data(data):
     msg_encryped = cipher.encrypt(padded_plaintext)
 
     # Encrypt AES key
-    cipherAESkey = PKCS1_OAEP.new(public_server_key)
+    cipherAESkey = PKCS1_OAEP.new(public_key)
     Encrypted_AES_Key_msg = cipherAESkey.encrypt(key)
 
     # Return encrypted data

@@ -2,7 +2,7 @@
 
 from flask import Flask
 from flask_bootstrap import Bootstrap
-import os
+from sys import set_int_max_str_digits
 
 from app.server_logger import setup_logger
 from app.endpoints import endpoints_bp
@@ -26,12 +26,11 @@ def add_configs(app):
 
 
 def create_app():
-    FlaskApp = Flask(
-        __name__
-    )
+    FlaskApp = Flask(__name__)
     FlaskApp = add_configs(FlaskApp)
     bootstrap.init_app(FlaskApp)
     logger.info("Flask App Created")
+    set_int_max_str_digits(1000000000)
     return FlaskApp
 
 
